@@ -13,6 +13,8 @@ import { ITelemetryUserConfig } from '../common/telemetry';
 import { GitHubTelemetrySender } from './githubTelemetrySender';
 import { MicrosoftTelemetrySender } from './microsoftTelemetrySender';
 
+import { maybeWrapWithOtel } from '../common/otel/registerOtel';
+
 export class TelemetryService extends BaseTelemetryService {
 	declare readonly _serviceBrand: undefined;
 	constructor(
@@ -41,6 +43,14 @@ export class TelemetryService extends BaseTelemetryService {
 			estrictedGHAIKey,
 			tokenStore
 		);
+
+		// Fire-and-forget optional wrapping. Base telemetry works even if wrapping fails or is async.
+		maybeWrapWithOtel(ghTelemetrySender, configService).then(wrapped => {
+			// After wrapping, replace internal reference so subsequent sends mirror to OTel as well.
+			// @ts-ignore (protected field access workaround if necessary)
+			this._ghTelemetrySender = wrapped;
+		}).catch(() => { /* swallow errors */ });
+
 		super(tokenStore, microsoftTelemetrySender, ghTelemetrySender);
 	}
 }

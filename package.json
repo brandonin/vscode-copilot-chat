@@ -3106,6 +3106,39 @@
 							"off",
 							"detailed"
 						]
+					},
+					"copilotChat.experimentalOtel.enabled": {
+						"type": "boolean",
+						"default": false,
+						"description": "Enable experimental mirroring of Copilot Chat telemetry events to an OpenTelemetry collector."
+					},
+					"copilotChat.experimentalOtel.endpoint": {
+						"type": "string",
+						"markdownDescription": "OTLP HTTP traces endpoint (e.g. `https://otel-collector.example.com/v1/traces`). Required when enabled."
+					},
+					"copilotChat.experimentalOtel.serviceName": {
+						"type": "string",
+						"default": "copilot-chat",
+						"description": "OTel service.name attribute."
+					},
+					"copilotChat.experimentalOtel.headers": {
+						"type": "object",
+						"additionalProperties": {
+							"type": "string"
+						},
+						"description": "Optional custom headers (e.g. Authorization) for the OTLP exporter."
+					},
+					"copilotChat.experimentalOtel.flushTimeoutMs": {
+						"type": "number",
+						"default": 3000,
+						"description": "Flush timeout (ms) for exporter shutdown."
+					},
+					"copilotChat.experimentalOtel.spanSampleRatio": {
+						"type": "number",
+						"default": 1,
+						"minimum": 0,
+						"maximum": 1,
+						"description": "Sampling ratio for spans (1.0 = all)."
 					}
 				}
 			}
@@ -4199,6 +4232,11 @@
 		"@anthropic-ai/sdk": "^0.63.0",
 		"@humanwhocodes/gitignore-to-minimatch": "1.0.2",
 		"@microsoft/tiktokenizer": "^1.0.10",
+		"@opentelemetry/api": "^1.9.0",
+		"@opentelemetry/sdk-trace-node": "^1.24.0",
+		"@opentelemetry/resources": "^1.24.0",
+		"@opentelemetry/semantic-conventions": "^1.24.0",
+		"@opentelemetry/exporter-trace-otlp-http": "^0.54.0",
 		"@vscode/copilot-api": "^0.1.10",
 		"@vscode/extension-telemetry": "^1.0.0",
 		"@vscode/l10n": "^0.0.18",
